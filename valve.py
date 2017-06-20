@@ -6,5 +6,17 @@ class Valve:
 	GPIO.setup(7, GPIO.OUT)
 	GPIO.output(7, GPIO.HIGH)
 
-	def IsOpen():
-		return GPIO.input(7)
+	def IsOpen(self):
+		return not GPIO.input(7)
+
+	def Open(self):
+		if(self.IsOpen()):
+			return
+
+		GPIO.output(7, GPIO.LOW)
+
+	def Close():
+		if(!self.IsOpen()):
+			return
+
+		GPIO.output(7, GPIO.HIGH)
