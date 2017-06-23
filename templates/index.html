@@ -30,18 +30,18 @@
 			}
 
 			var updateButtonText = function() {
-				getValveState.then(isOpen => {
+				getValveState().then(isOpen => {
 					if (isOpen) {
-						$("#valve").text = "Turn Off"
+						$("#valve").text("Turn Off")
 					} else {
-						$("#valve").text = "Turn On"
+						$("#valve").text("Turn On")
 					}
 				})
 			}
 
 			$("#valve").click(function() {
 				console.log('clicked');
-				getValveState.then(isOpen =>{
+				getValveState().then(isOpen =>{
 					updateButtonText()
 				})
 			});
