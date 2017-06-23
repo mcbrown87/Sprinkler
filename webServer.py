@@ -22,10 +22,12 @@ def getIsOpen():
 @app.route('/closeValve', methods=['POST'])
 def closeValve():
     valve.Close()
+    return ""
 
 @app.route('/openValve', methods=['POST'])
 def openValve():
     valve.Open()
+    return ""
 
 http_server = HTTPServer(WSGIContainer(app))
 http_server.listen(80)  # serving on port 5000
