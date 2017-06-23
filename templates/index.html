@@ -42,7 +42,10 @@
 			$("#valve").click(function() {
 				console.log('clicked');
 				getValveState().then(isOpen =>{
-					updateButtonText()
+					let endpoint = isOpen ? "closeValve" : "openValve" 
+					$.post(endpoint).always(()=>{
+						updateButtonText()
+					})	
 				})
 			});
 		});
