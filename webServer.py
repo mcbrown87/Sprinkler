@@ -29,6 +29,10 @@ def openValve():
     valve.Open()
     return ""
 
+@app.route('/openDuration', methods=['GET'])
+def getOpenDuration():
+    return jsonify(valveOpenDuration=str(valve.ValveOpenDuration()))
+
 http_server = HTTPServer(WSGIContainer(app))
 http_server.listen(80)  # serving on port 5000
 IOLoop.instance().start()

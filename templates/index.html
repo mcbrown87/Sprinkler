@@ -8,8 +8,9 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<style>
 		#valve {
-			height: 100%;
+			height: 90%;
 			font-size: 5em;
+			white-space: pre;
 		}
 	</style>
 </head>
@@ -32,7 +33,10 @@
 			var updateButtonText = function() {
 				getValveState().then(isOpen => {
 					if (isOpen) {
-						$("#valve").text("Turn Off")
+						$.getJSON('openDuration', data => {
+							let duration = data.valveOpenDuration.match(/(\d+):(\d+):(\d+)/g)[0]
+							$("#valve").text(`Turn Off\r\n${duration}`)
+						})
 					} else {
 						$("#valve").text("Turn On")
 					}
