@@ -1,7 +1,7 @@
 import unittest
 import datetime
 from mock import MagicMock, Mock
-from scheduler.lawnWateringScheduler import LawnWateringScheduler, TimeCriterion, DayCriterion
+from scheduler.lawnWateringScheduler import LawnWateringScheduler, TimeCriterion, DayCriterion, DependantCriterion
 
 
 class LawnWateringSchedulerShould(unittest.TestCase):
@@ -10,27 +10,24 @@ class LawnWateringSchedulerShould(unittest.TestCase):
 
 		mockCriteria = Mock()
 		mockCriteria.shouldStart.return_value = True
-		sut._runCriteria = [mockCriteria, mockCriteria]
+		sut._runCriteria = lambda : [mockCriteria, mockCriteria]
 
 		self.assertTrue(sut.shouldOpen())
 
 	def test_not_open_the_valve_based_on_criteria(self):
 		sut = LawnWateringScheduler()
 
-		mockCriteriaShouldStart = Mock()
-		mockCriteriaShouldStart.shouldStart.return_value = True
-
 		mockCriteriaShouldNotStart = Mock()
 		mockCriteriaShouldNotStart.shouldStart.return_value = False
 
-		sut._runCriteria = [mockCriteriaShouldStart, mockCriteriaShouldNotStart]
+		sut._runCriteria = lambda : [mockCriteriaShouldNotStart, mockCriteriaShouldNotStart]
 
 		self.assertFalse(sut.shouldOpen())
 
 	def test_should_close_after_duration_expired(self):
 		sut = LawnWateringScheduler()
 
-		sut._duration = datetime.timedelta(0, 0, 0, 0, 20)
+		sut._duration = lambda : datetime.timedelta(0, 0, 0, 0, 20)
 
 		mockValveWebService = Mock()
 		mockValveWebService.OpenDuration.return_value = datetime.timedelta(0, 1, 0, 0, 20)
@@ -41,7 +38,7 @@ class LawnWateringSchedulerShould(unittest.TestCase):
 	def test_should_not_close_before_duration_expired(self):
 		sut = LawnWateringScheduler()
 
-		sut._duration = datetime.timedelta(0, 0, 0, 0, 20)
+		sut._duration = lambda : datetime.timedelta(0, 0, 0, 0, 20)
 
 		mockValveWebService = Mock()
 		mockValveWebService.OpenDuration.return_value = datetime.timedelta(0, 0, 0, 0, 10)
@@ -86,6 +83,28 @@ class DayCriterionShould(unittest.TestCase):
 	def test_start_on_on_days(self):
 		sut = DayCriterion(0)
 		sut._currentDayGetter = lambda : 0
+
+		self.assertTrue(sut.shouldStart())
+
+class DependantCriterionShould(unittest.TestCase):
+	def test_not_start_if_all_containing_criteria_is_not_met(self):
+		mockCriterionFalse = Mock()
+		mockCriterionFalse.shouldStart.return_value = False
+
+		mockCriterionTrue = Mock()
+		mockCriterionTrue.shouldStart.return_value = True
+
+		criteria = [mockCriterionFalse, mockCriterionTrue]
+		sut = DependantCriterion(criteria)
+
+		self.assertFalse(sut.shouldStart())
+
+	def test_start_if_all_containing_criteria_is_met(self):
+		mockCriterionTrue = Mock()
+		mockCriterionTrue.shouldStart.return_value = True
+
+		criteria = [mockCriterionTrue, mockCriterionTrue]
+		sut = DependantCriterion(criteria)
 
 		self.assertTrue(sut.shouldStart())
 
