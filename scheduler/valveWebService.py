@@ -1,8 +1,6 @@
 import json
 import urllib2
 import datetime
-
-import dateutil
 import pytimeparse as pytimeparse
 
 

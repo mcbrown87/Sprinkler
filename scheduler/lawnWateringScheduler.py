@@ -2,8 +2,7 @@ import datetime
 import json
 import time
 from dateutil import parser
-
-from scheduler.valveWebService import ValveWebService
+from valveWebService import ValveWebService
 
 class LawnWateringScheduler:
 	def __init__(self):
