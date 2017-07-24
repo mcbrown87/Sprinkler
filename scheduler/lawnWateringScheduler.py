@@ -3,6 +3,8 @@ import json
 import os
 import time
 from dateutil import parser
+
+from weatherWebService import WeatherWebService
 from valveWebService import ValveWebService
 
 class LawnWateringScheduler:
@@ -73,6 +75,13 @@ class EnabledCriterion:
 	def shouldStart(self):
 		return self._shouldStart
 
+class WeatherCriterion:
+	def __init__(self):
+		self._weatherWebService = WeatherWebService()
+
+	def shouldStart(self):
+		return self._weatherWebService.CurrentWeather() != "Rain"
+
 class ConfigFile:
 	def __init__(self, file):
 		with open(file) as data_file:
@@ -84,7 +93,10 @@ class ConfigFile:
 
 		for day in self._data["days"]:
 			for time in self._data["times"]:
-				criterion = DependantCriterion([TimeCriterion(parser.parse(time).time()), DayCriterion(day), EnabledCriterion(self.enabled)])
+				criterion = DependantCriterion([TimeCriterion(parser.parse(time).time()),
+				                                DayCriterion(day),
+				                                EnabledCriterion(self.enabled),
+				                                WeatherCriterion()])
 				criteria.append(criterion)
 
 		return criteria
