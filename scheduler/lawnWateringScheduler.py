@@ -1,14 +1,15 @@
 import datetime
 import json
+import os
 import time
 from dateutil import parser
 from valveWebService import ValveWebService
 
 class LawnWateringScheduler:
 	def __init__(self):
-		self._duration = lambda : datetime.timedelta(0, 0, 0, 0, ConfigFile('config.json').valveOpenDurationMinutes)
+		self._duration = lambda : datetime.timedelta(0, 0, 0, 0, ConfigFile(os.path.dirname(os.path.realpath(__file__)) + '/config.json').valveOpenDurationMinutes)
 		self._sleepTime = 30
-		self._runCriteria = lambda : ConfigFile('config.json').runCriteria
+		self._runCriteria = lambda : ConfigFile(os.path.dirname(os.path.realpath(__file__)) + '/config.json').runCriteria
 		self._valveWebService = ValveWebService()
 
 	def shouldOpen(self):
