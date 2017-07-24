@@ -1,5 +1,6 @@
 {
   "days" : [0, 1, 2, 3, 4, 6],
-  "times" : ["11:54", "19:00"],
-  "duration" : 1
+  "times" : ["6:34", "19:00"],
+  "duration" : 15,
+  "enabled" : "False"
 }

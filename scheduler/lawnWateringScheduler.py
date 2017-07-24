@@ -61,6 +61,17 @@ class DayCriterion:
 	def shouldStart(self):
 		return self._day == self._currentDayGetter()
 
+class EnabledCriterion:
+	def __init__(self, shouldStart):
+		if shouldStart == 'True':
+			self._shouldStart = True
+
+		else:
+			self._shouldStart = False
+
+	def shouldStart(self):
+		return self._shouldStart
+
 class ConfigFile:
 	def __init__(self, file):
 		with open(file) as data_file:
@@ -72,7 +83,7 @@ class ConfigFile:
 
 		for day in self._data["days"]:
 			for time in self._data["times"]:
-				criterion = DependantCriterion([TimeCriterion(parser.parse(time).time()), DayCriterion(day)])
+				criterion = DependantCriterion([TimeCriterion(parser.parse(time).time()), DayCriterion(day), EnabledCriterion(self.enabled)])
 				criteria.append(criterion)
 
 		return criteria
@@ -80,6 +91,10 @@ class ConfigFile:
 	@property
 	def valveOpenDurationMinutes(self):
 		return self._data["duration"]
+
+	@property
+	def enabled(self):
+		return self._data["enabled"]
 
 def main():
 	app = LawnWateringScheduler()
