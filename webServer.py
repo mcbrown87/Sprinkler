@@ -1,8 +1,8 @@
+import os
 from flask import Flask
 from flask import render_template
 from flask import jsonify
-from valve import Valve
-
+from mockValve import Valve
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -32,6 +32,12 @@ def openValve():
 @app.route('/openDuration', methods=['GET'])
 def getOpenDuration():
     return jsonify(valveOpenDuration=str(valve.ValveOpenDuration()))
+
+@app.route('/config', methods=['GET'])
+def getConfig():
+    with open(os.path.dirname(os.path.realpath(__file__)) + '/scheduler/config.json', 'r') as config_file:
+        return config_file.read()
+
 
 http_server = HTTPServer(WSGIContainer(app))
 http_server.listen(80)  # serving on port 5000
