@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask import render_template
 from flask import jsonify
-from mockValve import Valve
+from valve import Valve
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
