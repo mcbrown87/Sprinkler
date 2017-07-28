@@ -2,6 +2,8 @@ import datetime
 import json
 import os
 import time
+
+import sys
 from dateutil import parser
 
 from weatherWebService import WeatherWebService
@@ -26,13 +28,19 @@ class LawnWateringScheduler:
 
 	def run(self):
 		while(True):
-			if self.shouldOpen():
-				self._valveWebService.Open()
+			try:
+				if self.shouldOpen():
+					self._valveWebService.Open()
 
-			if self.shouldClose():
-				self._valveWebService.Close()
+				if self.shouldClose():
+					self._valveWebService.Close()
 
-			time.sleep(5)
+				time.sleep(5)
+			except:
+				e = sys.exc_info()[0]
+				with open(os.path.dirname(os.path.realpath(__file__)) + 'scheduler.log', 'a') as file:
+					file.write(e)
+					file.write("\r\n")
 
 class DependantCriterion:
 	def __init__(self, criteria):
@@ -114,4 +122,4 @@ def main():
 	app.run()
 
 if __name__ == "__main__":
-		main()
+	main()
