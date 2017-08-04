@@ -38,6 +38,10 @@ def getConfig():
     with open(os.path.dirname(os.path.realpath(__file__)) + '/scheduler/config.json', 'r') as config_file:
         return config_file.read()
 
+@app.route('/log', methods=['GET'])
+def getLog():
+    with open('/tmp/rc.local.log', 'r') as log_file:
+        return log_file.read() 
 
 http_server = HTTPServer(WSGIContainer(app))
 http_server.listen(80)  # serving on port 5000
