@@ -38,9 +38,7 @@ class LawnWateringScheduler:
 				time.sleep(5)
 			except:
 				e = sys.exc_info()[0]
-				with open(os.path.dirname(os.path.realpath(__file__)) + 'scheduler.log', 'a') as file:
-					file.write(e)
-					file.write("\r\n")
+				print(e)
 
 class DependantCriterion:
 	def __init__(self, criteria):
